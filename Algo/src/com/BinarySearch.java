@@ -1,6 +1,10 @@
 package com;
 
-
+/**
+ * Test 
+ * @author jaggi
+ *
+ */
 public class BinarySearch {
 
 	private int size;
