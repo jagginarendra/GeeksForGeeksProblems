@@ -1,0 +1,57 @@
+package com;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class TestDemo {
+
+	public static void main(String[] args) {
+
+		String str;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		try {
+			str = br.readLine();
+			TestDemo testObj = new TestDemo();
+			String result = testObj.compressString(str);
+			System.out.println(result);
+		} catch (IOException e) {
+
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	public String compressString(String inputString) {
+
+		// eg aabbcccccaaa a2b2c5a3
+
+		String outputString = "";
+		StringBuffer tempOutput = new StringBuffer();
+		int length = inputString.length();
+		char current;
+		char temp = inputString.charAt(0);
+		int tempCounter = 1;
+
+		for (int i = 1; i < length; i++) {
+
+			current = inputString.charAt(i);
+
+			if (current != temp) {
+				tempOutput.append(temp).append(tempCounter);
+				temp = current;
+				tempCounter = 1;
+			} else {
+				tempCounter++;
+			}
+		}
+		tempOutput.append(temp).append(tempCounter);
+
+		outputString = tempOutput.toString();
+
+		if (inputString.length() < outputString.length())
+			return inputString;
+
+		return outputString;
+	}
+}
