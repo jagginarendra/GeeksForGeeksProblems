@@ -1,0 +1,53 @@
+package com;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class StringPermutation {
+
+	public static void main(String[] args) {
+
+		String str1 = "", str2 = "";
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		try {
+
+			str1 = br.readLine();
+			str2 = br.readLine();
+			StringPermutation testObj = new StringPermutation();
+			boolean status = testObj.isPermutation(str1, str2);
+			System.out.println("str2 is perm. of str1 " + status);
+
+		} catch (IOException e) {
+
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	public boolean isPermutation(String str1, String str2) {
+		boolean status = true;
+
+		int array[] = new int[26];
+		char temp;
+		str1 = str1.toLowerCase();
+		str2 = str2.toLowerCase();
+		int length = str1.length();
+		for (int i = 0; i < length; i++) {
+			temp = str1.charAt(i);
+			array[temp - 97] = 1;
+		}
+
+		length = str2.length();
+
+		for (int i = 0; i < length; i++) {
+			temp = str2.charAt(i);
+			if (array[temp - 97] != 1) {
+				status = false;
+			}
+			;
+		}
+		return status;
+	}
+}
