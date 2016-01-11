@@ -1,0 +1,50 @@
+package com;
+
+import java.util.Scanner;
+
+public class MatrixZero {
+
+	public static void main(String[] args) {
+
+		int rows, cols;
+		Scanner s = new Scanner(System.in);
+		rows = s.nextInt();
+		cols = s.nextInt();
+		int matrix[][] = new int[rows][cols];
+		int rowArray[] = new int[rows];
+		int colArray[] = new int[cols];
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+
+				matrix[i][j] = s.nextInt();
+				if (matrix[i][j] == 0) {
+
+					rowArray[i] = 1;
+					colArray[i] = 1;
+				}
+			}
+		}
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+
+				if (rowArray[i] == 1 || colArray[j] == 1) {
+					matrix[i][j] = 0;
+				}
+			}
+		}
+		System.out.println("Printing After changes");
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println("");
+		}
+
+		s.close();
+
+	}
+
+}
