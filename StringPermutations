@@ -1,0 +1,54 @@
+package com;
+
+import java.util.Scanner;
+
+public class Permutations {
+
+	static public void main(String[] args) {
+
+		String input = null;
+		Scanner scanner = new Scanner(System.in);
+		input = scanner.next();
+
+		Permutations obj = new Permutations();
+		obj.printAllPermutations(input);
+
+		scanner.close();
+
+	}
+
+	public void printAllPermutations(String input) {
+
+		// char array[] = input.toCharArray();
+		int length = input.length();
+
+		for (int i = 0; i < length; i++) {
+
+			String fix = input.charAt(i) + "";
+			String word = input.substring(0, i) + input.substring(i + 1);
+			printString(fix, word);
+
+		}
+	}
+
+	public static void printString(String fix, String word) {
+
+		if (word.length() == 1) {
+
+			System.out.println(fix + word);
+		} else {
+
+			int length = word.length();
+
+			for (int i = 0; i < length; i++) {
+
+				String newfix = fix + word.charAt(i);
+				String newWord = word.substring(0, i) + word.substring(i + 1);
+				printString(newfix, newWord);
+			}
+
+		}
+
+	}
+
+}
