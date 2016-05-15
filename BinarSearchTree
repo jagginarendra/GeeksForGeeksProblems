@@ -1,0 +1,171 @@
+package com.demo.tree;
+
+import java.util.Queue;
+
+class Node {
+
+	int data;
+	Node left;
+	Node right;
+
+	public Node(int data) {
+		this.data = data;
+	}
+}
+
+public class BinarSearchTree {
+
+	static Node root;
+
+	public static void main(String[] args) {
+
+		int sortedArray[] = { 10, 20, 30, 40, 50, 60 };
+		// int sortedArray[] = {-1,5,10};
+		System.out.println(sortedArray.length);
+		root = convertArrayToBST(sortedArray, 0, sortedArray.length - 1);
+		searchNode(500);
+		getMaxInTree();
+		getMinInTree();
+		System.out.println("height=" + findTreeHeight(root));
+		System.out.println("PreOrder Traversing");
+		preOrderTraversing(root);
+		System.out.println("\n In Order Traversing");
+		inOrderTraversing(root);
+		System.out.println("\n Post Order Traversing");
+		postOrderTraversing(root);
+		
+
+	}
+
+	public static Node convertArrayToBST(int array[], int start, int end) {
+
+		if (start > end)
+			return null;
+
+		int mid = (start + end) / 2;
+
+		Node newNode = new Node(array[mid]);
+		newNode.left = convertArrayToBST(array, start, mid - 1);
+		newNode.right = convertArrayToBST(array, mid + 1, end);
+
+		return newNode;
+	}
+
+	public static void searchNode(int data) {
+
+		Node current = root;
+		boolean isElementFound = false;
+
+		while (current != null) {
+
+			if (current.data == data) {
+
+				System.out.println("element found");
+				isElementFound = true;
+				break;
+			} else if (current.data > data) {
+				current = current.left;
+			} else {
+				current = current.right;
+			}
+
+		}
+
+		if (isElementFound == false)
+			System.out.println("Element Not Present!");
+
+	}
+
+	public static int getMaxInTree() {
+
+		int max = Integer.MIN_VALUE;
+		Node current = root;
+		while (current.right != null) {
+
+			current = current.right;
+		}
+
+		max = current.data;
+		System.out.println("max element is=" + max);
+		return max;
+	}
+
+	public static int getMinInTree() {
+
+		int min = 0;
+		Node current = root;
+		while (current.left != null) {
+
+			current = current.left;
+		}
+
+		min = current.data;
+		System.out.println("min in tree=" + min);
+		return min;
+	}
+
+	public static int findTreeHeight(Node node) {
+
+		int maxHeight = 0;
+
+		if (node == null) {
+
+			return -1;
+		}
+
+		int left_treeHeight = findTreeHeight(node.left);
+		int right_treeHeight = findTreeHeight(node.right);
+
+		maxHeight = left_treeHeight >= right_treeHeight ? left_treeHeight : right_treeHeight;
+
+		maxHeight++;
+
+		return maxHeight;
+	}
+
+	public static void preOrderTraversing(Node rootNode) {
+
+		if (rootNode != null) {
+
+			System.out.print(rootNode.data + " ");
+			preOrderTraversing(rootNode.left);
+			preOrderTraversing(rootNode.right);
+
+		}
+	}
+
+	public static void inOrderTraversing(Node rootNode) {
+
+		if (rootNode != null) {
+
+			inOrderTraversing(rootNode.left);
+			System.out.print(rootNode.data + " ");
+			inOrderTraversing(rootNode.right);
+
+		}
+
+	}
+
+	public static void postOrderTraversing(Node rootNode) {
+
+		if (rootNode != null) {
+
+			postOrderTraversing(rootNode.left);
+			postOrderTraversing(rootNode.right);
+			System.out.print(rootNode.data + " ");
+		}
+
+	}
+
+	/*public static void levelOrderTraversal(Node rootNode){
+		
+		
+		Queue<E>
+		
+		
+		
+		
+	}*/
+	
+	
+}
