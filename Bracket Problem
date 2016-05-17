@@ -1,0 +1,152 @@
+package com;
+
+import java.util.Scanner;
+
+class SegmentTreeNode {
+
+	int unmatchedOpenParen, unmatchedClosedParen;
+
+	void assignLeaf(char parenthesis) {
+
+		if (parenthesis == '(') {
+			System.out.println("assigining (");
+			this.unmatchedOpenParen = 1;
+			this.unmatchedClosedParen = 0;
+		} else {
+
+			System.out.println("assigning )");
+			this.unmatchedOpenParen = 0;
+			this.unmatchedClosedParen = 1;
+		}
+
+	}
+
+	void merge(SegmentTreeNode left, SegmentTreeNode right) {
+
+		System.out.println("merging,left=" + left + ",right=" + right);
+
+		int newMatches = left.unmatchedOpenParen >= right.unmatchedClosedParen ? right.unmatchedClosedParen
+				: left.unmatchedOpenParen;
+
+		this.unmatchedOpenParen = right.unmatchedOpenParen + left.unmatchedOpenParen - newMatches;
+
+		this.unmatchedClosedParen = left.unmatchedClosedParen + right.unmatchedClosedParen - newMatches;
+
+	}
+
+	boolean getValue(SegmentTreeNode node) {
+
+		return (node.unmatchedClosedParen == 0 && node.unmatchedOpenParen == 0);
+
+	}
+
+}
+
+class SegmentTree {
+
+	char word[];
+	int N;
+
+	SegmentTreeNode nodes[]; // array to store nodes
+
+	public SegmentTree(char word[], int N) {
+
+		this.word = word;
+		this.N = N;
+
+		nodes = new SegmentTreeNode[getTreeSize(N)];
+		buildTree(word, 1, 0, N - 1);
+
+	}
+
+	int getTreeSize(int N) {
+
+		int size = 1;
+
+		for (; size <= N; size <<= 1)
+			;
+
+		System.out.println("size is=" + size);
+		return size;
+
+	}
+
+	// current - stIndex , start - lo , end - hi
+	void buildTree(char arr[], int stIndex, int low, int high) {
+
+		System.out.println("build tree, stIndex=" + stIndex + ",low=" + low + ",high=" + high);
+		if (low == high) {
+
+			nodes[stIndex] = new SegmentTreeNode();
+			nodes[stIndex].assignLeaf(arr[low]);
+
+		} else {
+
+			int left = 2 * stIndex;
+			int right = left + 1;
+			int mid = (low + high) / 2;
+
+			buildTree(arr, left, low, mid);
+			buildTree(arr, right, mid + 1, high);
+
+			nodes[stIndex] = new SegmentTreeNode();
+			nodes[stIndex].merge(nodes[left], nodes[right]);
+		}
+
+	}
+
+	boolean getValue(int start, int end) {
+
+		SegmentTreeNode resultNode = getResultNode(1, 0, N - 1, start, end);
+		return resultNode.getValue(resultNode);
+	}
+
+	private SegmentTreeNode getResultNode(int current, int left, int right, int low, int high) {
+
+		if (left == low && right == high)
+			return nodes[current];
+
+		int mid = (left + right) / 2;
+
+		if (low > mid)
+			return getResultNode(2 * current + 1, mid + 1, right, low, high);
+
+		if (high <= mid)
+			return getResultNode(2 * current, left, mid, low, high);
+
+		SegmentTreeNode leftResult = getResultNode(2 * current, left, mid, low, mid);
+		SegmentTreeNode rightResult = getResultNode(2 * current + 1, mid + 1, right, mid + 1, high);
+
+		SegmentTreeNode result = new SegmentTreeNode();
+
+		result.merge(leftResult, rightResult);
+
+		return result;
+
+	}
+
+}
+
+public class Brackets {
+
+	public static void main(String[] args) {
+
+		int N;
+		String input;
+		Scanner s = new Scanner(System.in);
+
+		N = s.nextInt();
+		input = s.next();
+		char arr[] = input.toCharArray();
+
+		SegmentTree tree = new SegmentTree(arr, N);
+
+		boolean b = tree.getValue(0, N - 1);
+
+		if (b == true)
+			System.out.println("Yes");
+		else
+			System.out.println("No");
+	}
+
+}
