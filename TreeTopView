@@ -1,0 +1,71 @@
+package com;
+
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+
+class TreeNodeElement {
+
+	int data;
+	int heightDistance;
+
+	TreeNodeElement left;
+	TreeNodeElement right;
+
+	public TreeNodeElement(int data) {
+		this.data = data;
+	}
+}
+
+public class TreeMain {
+
+	static TreeNodeElement root = null;
+
+	static void printTreeTopView(TreeNodeElement rootNode) {
+
+		LinkedHashSet<Integer> set = new LinkedHashSet<Integer>();
+
+		Queue<TreeNodeElement> queue = new LinkedList<TreeNodeElement>();
+
+		rootNode.heightDistance = 0;
+		queue.add(rootNode);
+
+		while (!queue.isEmpty()) {
+
+			TreeNodeElement currentNode = queue.remove();
+			int hd = currentNode.heightDistance;
+
+			if (!set.contains(hd)) {
+
+				set.add(hd);
+				System.out.print(currentNode.data + " ");
+
+			}
+			if (currentNode.left != null) {
+
+				queue.add(currentNode.left);
+				currentNode.left.heightDistance = currentNode.heightDistance - 1;
+			}
+			if (currentNode.right != null) {
+
+				queue.add(currentNode.right);
+				currentNode.right.heightDistance = currentNode.heightDistance + 1;
+
+			}
+
+		}
+
+	}
+
+	public static void main(String[] args) {
+
+		root = new TreeNodeElement(1);
+		root.left = new TreeNodeElement(2);
+		root.right = new TreeNodeElement(3);
+		root.left.right = new TreeNodeElement(4);
+		root.left.right.right = new TreeNodeElement(5);
+		root.left.right.right.right = new TreeNodeElement(6);
+
+		printTreeTopView(root);
+	}
+}
