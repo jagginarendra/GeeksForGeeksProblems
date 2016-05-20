@@ -1,6 +1,11 @@
 package com;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 class SegmentTreeNode {
 
@@ -9,12 +14,12 @@ class SegmentTreeNode {
 	void assignLeaf(char parenthesis) {
 
 		if (parenthesis == '(') {
-			System.out.println("assigining (");
+			// System.out.println("assigning (");
 			this.unmatchedOpenParen = 1;
 			this.unmatchedClosedParen = 0;
 		} else {
 
-			System.out.println("assigning )");
+			// System.out.println("assigning )");
 			this.unmatchedOpenParen = 0;
 			this.unmatchedClosedParen = 1;
 		}
@@ -23,7 +28,7 @@ class SegmentTreeNode {
 
 	void merge(SegmentTreeNode left, SegmentTreeNode right) {
 
-		System.out.println("merging,left=" + left + ",right=" + right);
+		// System.out.println("merging,left=" + left + ",right=" + right);
 
 		int newMatches = left.unmatchedOpenParen >= right.unmatchedClosedParen ? right.unmatchedClosedParen
 				: left.unmatchedOpenParen;
@@ -63,34 +68,36 @@ class SegmentTree {
 
 		int size = 1;
 
+		// using bitwise to multiply the size by 20
 		for (; size <= N; size <<= 1)
 			;
 
-		System.out.println("size is=" + size);
+		size <<= 1;
+
+		// System.out.println("size is=" + size);
+
 		return size;
 
 	}
 
-	// current - stIndex , start - lo , end - hi
-	void buildTree(char arr[], int stIndex, int low, int high) {
+	void buildTree(char arr[], int current, int low, int high) {
 
-		System.out.println("build tree, stIndex=" + stIndex + ",low=" + low + ",high=" + high);
 		if (low == high) {
 
-			nodes[stIndex] = new SegmentTreeNode();
-			nodes[stIndex].assignLeaf(arr[low]);
+			nodes[current] = new SegmentTreeNode();
+			nodes[current].assignLeaf(arr[low]);
 
 		} else {
 
-			int left = 2 * stIndex;
+			int left = 2 * current;
 			int right = left + 1;
 			int mid = (low + high) / 2;
 
 			buildTree(arr, left, low, mid);
 			buildTree(arr, right, mid + 1, high);
 
-			nodes[stIndex] = new SegmentTreeNode();
-			nodes[stIndex].merge(nodes[left], nodes[right]);
+			nodes[current] = new SegmentTreeNode();
+			nodes[current].merge(nodes[left], nodes[right]);
 		}
 
 	}
@@ -125,28 +132,92 @@ class SegmentTree {
 
 	}
 
+	public void updateUtil(int index, char value) {
+
+		update(1, 0, N - 1, index, value);
+
+	}
+
+	public void update(int startIndex, int low, int high, int updateIndex, char value) {
+
+		if (low == high) {
+
+			nodes[startIndex].assignLeaf(value);
+			return;
+		}
+
+		int left = 2 * startIndex;
+		int right = left + 1;
+		int mid = (low + high) / 2;
+
+		if (updateIndex <= mid)
+			update(left, low, mid, updateIndex, value);
+		else
+			update(right, mid + 1, high, updateIndex, value);
+
+		nodes[startIndex].merge(nodes[left], nodes[right]);
+	}
+
 }
 
-public class Brackets {
+class Brackets {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		int N;
-		String input;
-		Scanner s = new Scanner(System.in);
+		//String input;
+		//Scanner s = new Scanner(System.in);
 
-		N = s.nextInt();
-		input = s.next();
-		char arr[] = input.toCharArray();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter writer = new PrintWriter(System.out);
+	
 
-		SegmentTree tree = new SegmentTree(arr, N);
+		for (int i = 1; i <= 10; i++) {
 
-		boolean b = tree.getValue(0, N - 1);
+			StringTokenizer st = new StringTokenizer(reader.readLine());
+			N = Integer.parseInt(st.nextToken());
+			char arr[] = new char[N];
 
-		if (b == true)
-			System.out.println("Yes");
-		else
-			System.out.println("No");
+			st = new StringTokenizer(reader.readLine());
+			//int counter = 0;
+
+			String ip = st.nextToken();
+			arr = ip.toCharArray();
+			SegmentTree tree = new SegmentTree(arr, N);
+
+			st = new StringTokenizer(reader.readLine());
+
+			int k = Integer.parseInt(st.nextToken());
+
+			while ((k--) > 0) {
+
+				st = new StringTokenizer(reader.readLine());
+				int choice = Integer.parseInt(st.nextToken());
+				if (choice != 0) {
+
+					char ch = arr[choice];
+					if (ch == '(')
+						arr[choice] = ')';
+					else
+						arr[choice] = '(';
+
+					tree.updateUtil(choice, arr[choice]);
+				} else { // to get the tree result
+
+					boolean b = tree.getValue(0, N - 1);
+
+					if (b == true)
+						writer.write("YES" + "\n");
+					else
+						writer.write("NO" + "\n");
+
+					writer.flush();
+				}
+
+			}
+		}
+
+		
 	}
 
 }
