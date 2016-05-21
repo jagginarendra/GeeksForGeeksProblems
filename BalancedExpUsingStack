@@ -1,0 +1,86 @@
+package com;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+public class BalancedParenthesis {
+
+	public static boolean checkBalanceParenthesis(String input) {
+
+		Stack<Character> stack = new Stack<Character>();
+		int length = input.length();
+		int counter = 0;
+
+		while (counter < length) {
+
+			char temp = input.charAt(counter);
+			if (temp == '(' || temp == '{' || temp == '[') {
+
+				stack.push(temp);
+				counter++;
+
+			} else {
+
+				if (!stack.isEmpty()) {
+
+					char checkFor;
+
+					if (temp == ')') {
+						checkFor = '(';
+					} else if (temp == '}')
+						checkFor = '{';
+					else
+						checkFor = '[';
+
+					// System.out.println("checking for this opening-" +
+					// checkFor);
+
+					if (stack.peek() == checkFor) {
+
+						stack.pop();
+						// System.out.println("poped out matching");
+
+						counter++;
+					} else {
+						// System.out.println("found wrong closing bracket");
+						return false;
+					}
+
+				} else {
+
+					// System.out.println("breaking , stack empty");
+					return false;
+				}
+
+			}
+
+		}
+
+		if (stack.isEmpty())
+			return true;
+		else
+			return false;
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter writer = new PrintWriter(System.out);
+
+		StringTokenizer st = new StringTokenizer(reader.readLine());
+
+		String input = st.nextToken();
+
+		if (checkBalanceParenthesis(input)) {
+
+			writer.write("Balanced\n");
+		} else
+			writer.write("Unbalanced\n");
+
+		writer.flush();
+	}
+}
