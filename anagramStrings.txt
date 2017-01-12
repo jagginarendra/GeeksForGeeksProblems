@@ -1,0 +1,53 @@
+package com.demo;
+
+public class StringDemo {
+
+	public static void main(String[] args) {
+
+		String str = "hello", str2 = "hel";
+
+		System.out.println(numberNedded(str, str2));
+
+	}
+
+	private static int numberNedded(String str, String str2) {
+
+		int charCount1[] = getCharCount(str);
+		int charCount2[] = getCharCount(str2);
+
+		return getDelta(charCount1, charCount2);
+
+	}
+
+	private static int getDelta(int[] charCount1, int[] charCount2) {
+
+		int delta = 0;
+
+		if (charCount1.length != charCount2.length)
+			return -1;
+
+		for (int i = 0; i < 26; i++) {
+
+			int difference = Math.abs(charCount1[i] - charCount2[i]);
+
+			delta = delta + difference;
+		}
+
+		return delta;
+	}
+
+	private static int[] getCharCount(String str) {
+
+		int charCounts[] = new int[26];
+
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			int offset = (int) 'a';
+
+			charCounts[c - offset]++;
+
+		}
+		return charCounts;
+	}
+
+}
