@@ -1,0 +1,78 @@
+package com.demo;
+
+public class StringDemo {
+
+	private static double sortedTimings[];
+
+	private static char event[];
+
+	public static void main(String[] args) {
+
+		double arrival[] = { 5.00 , 6.00 , 7.00};
+		double departure[] = {6.30 , 7.00 , 8.00 };
+
+		int minimumPlatforms = getMinimumPlatforms(arrival, departure);
+
+		System.out.println(minimumPlatforms);
+	}
+
+	private static int getMinimumPlatforms(double[] arrival, double[] departure) {
+
+		sortArrivalAndDeparture(arrival, departure);
+		int platformCount = calculatePlatforms();
+
+		return platformCount;
+	}
+
+	private static int calculatePlatforms() {
+
+		int platformsCount = 0;
+		int maxCount = 0;
+		for (int i = 0; i < event.length; i++) {
+
+			if (event[i] == 'A') {
+
+				platformsCount++;
+
+				if (platformsCount > maxCount)
+					maxCount = platformsCount;
+			} else {
+
+				platformsCount--;
+			}
+
+		}
+
+		return maxCount;
+	}
+
+	private static void sortArrivalAndDeparture(double[] arrival, double[] departure) {
+
+		sortedTimings = new double[arrival.length * 2];
+		event = new char[arrival.length * 2];
+		int c = 0;
+		for (int i = 0, j = 0; i < arrival.length && j < departure.length;) {
+
+			if (arrival[i] < departure[j]) {
+
+				event[c] = 'A';
+				sortedTimings[c++] = arrival[i];
+				i++;
+			} else if (arrival[i] > departure[j]) {
+				event[c] = 'D';
+				sortedTimings[c++] = departure[j];
+				j++;
+			} else {
+				event[c] = 'A';
+				sortedTimings[c++] = arrival[i];
+				i++;
+				event[c] = 'D';
+				sortedTimings[c++] = departure[j];
+				j++;
+			}
+
+		}
+
+	}
+
+}
